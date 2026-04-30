@@ -77,11 +77,31 @@ if (-not $SkipClaude) {
                 hooks   = @([PSCustomObject]@{ type = "command"; command = $hookCmd })
             }
             $json.hooks.SessionStart += $newEntry
-            $json | ConvertTo-Json -Depth 10 | Set-Content $claudeSettings -Encoding utf8
             Write-Ok "SessionStart hook 已写入 settings.json"
         } else {
             Write-Warn "SessionStart hook 已存在，跳过"
         }
+
+        # PostToolUse: Java 专属检查（compile + mapper + controller-client）
+        $javaHookCmd = "node `"$($hooksDir -replace '\\','/')/post-java-check.js`""
+        if (-not $json.hooks.PostToolUse) {
+            $json.hooks | Add-Member -NotePropertyName PostToolUse -NotePropertyValue @()
+        }
+        $javaHookExists = $json.hooks.PostToolUse | Where-Object {
+            $_.hooks | Where-Object { $_.command -like "*post-java-check*" }
+        }
+        if (-not $javaHookExists) {
+            $javaEntry = [PSCustomObject]@{
+                matcher = "Edit|Write"
+                hooks   = @([PSCustomObject]@{ type = "command"; command = $javaHookCmd; timeout = 120 })
+            }
+            $json.hooks.PostToolUse += $javaEntry
+            Write-Ok "PostToolUse Java hook 已写入 settings.json"
+        } else {
+            Write-Warn "PostToolUse Java hook 已存在，跳过"
+        }
+
+        $json | ConvertTo-Json -Depth 10 | Set-Content $claudeSettings -Encoding utf8
     } else {
         Write-Warn "settings.json 不存在，请手动参考 config/claude-settings-snippet.json"
     }
