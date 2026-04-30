@@ -36,6 +36,16 @@
 - 审查任务不得修改业务代码。
 - 验证任务只记录命令、结果和失败摘要。
 - 所有阻塞问题写入 `questions.md`。
+- 机器可校验分工必须同步写入 `agent-space/assignments.json`。
+- 子 Agent 完成后必须写 `agent-space/handoffs/` 或对应 `reviews/`、`verification/` 输出。
+- `run.json`、`agent-space/decisions.md`、`agent-space/assignments.json` 只允许主 Agent 修改。
+
+## 机器校验
+
+```powershell
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" agents status {change-id}
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" agents verify {change-id}
+```
 
 ## 分工模板
 
@@ -49,9 +59,9 @@ input:
 owned_outputs:
   - agent-space/findings/impact-api.md
 allowed_paths:
-  - scrm-waba-client/src/main/java
-  - scrm-waba-common/src/main/java
-  - scrm-waba-server/src/main/java/**/controller
+  - module-a/src/main/java
+  - module-b/src/main/java
+  - module-c/src/main/java/**/controller
 must_report:
   - 证据路径
   - 影响文件

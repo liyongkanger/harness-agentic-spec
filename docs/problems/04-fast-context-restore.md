@@ -76,12 +76,12 @@ updated: {ISO 时间}
 - [x] `session-start-openspec.js` 实现并注册到 Claude Code + Codex
 - [x] Hook 三层加载逻辑：checkpoint → brief+decisions → 空
 - [x] Checkpoint 格式规范在 SKILL.md 和 P1 中定义
-- [x] scrm-waba 首个 checkpoint（`review-done.md`）验证注入效果
+- [x] 示例项目首个 checkpoint（`review-done.md`）验证注入效果
 - [x] 实测输出：启动即加载，30 行内完整上下文
 
 ### 未完成 / 缺口
 
-- [ ] **Checkpoint 依赖手动写入**：没有 checkpoint 时 fallback 到 brief.md，内容可能很长（当前 scrm-waba brief.md 超过 100 行）
+- [ ] **Checkpoint 依赖手动写入**：没有 checkpoint 时 fallback 到 brief.md，内容可能很长（例如某个 change 的 brief.md 超过 100 行）
 - [ ] **多 change 并行时的优先级**：同一项目有多个进行中 change 时，hook 全部加载，上下文可能过长
 - [ ] **PreCompact hook 缺失**：会话中途上下文压缩时，checkpoint 不会自动写入，同一会话内也会失忆
 

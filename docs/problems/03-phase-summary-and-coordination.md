@@ -89,7 +89,7 @@ agent-space/
 - [x] checkpoints/ 格式规范在 SKILL.md 中定义
 - [x] 主 Agent / 子 Agent 职责边界在 SKILL.md 中定义
 - [x] questions.md → decisions.md 裁决流程在 SKILL.md 中定义
-- [x] scrm-waba 实际使用验证（waba-quality-monitoring 有完整的 reviews/ 和 decisions.md）
+- [x] 示例项目实际使用验证（`{change-id}` 有完整的 reviews/ 和 decisions.md）
 
 ### 未完成 / 缺口
 

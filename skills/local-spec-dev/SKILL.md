@@ -75,6 +75,31 @@ proposal -> impact -> design -> tasks -> implementation -> verification -> revie
 
 **每个阶段结束，更新 `run.json` 的同时，必须写入 checkpoint**（见 `## Checkpoint 规范`）。
 
+阶段推进后必须运行机器校验，不能只靠人工阅读：
+
+```powershell
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" validate {change-id}
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" gate {completed-stage} {change-id}
+```
+
+上述稳定路径由插件初始化脚本 `scripts/plugin-install.ps1` 创建；若未初始化，先运行插件初始化。
+
+进入 `review` 或 `archive` 前，使用严格模式：
+
+```powershell
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" validate {change-id} --strict
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" gate review {change-id}
+```
+
+如校验失败，必须回到最小必要阶段修正 `run.json`、产物、任务状态或 checkpoint，再重新校验。
+
+`gate` 决策含义：
+
+- `pass`：允许进入下一阶段。
+- `warn`：允许继续，但必须把风险写入当前阶段文档或 `review.md`。
+- `block`：不允许推进，必须修正后重跑。
+- `waived`：人工豁免，必须使用 `--waive "<reason>"`，并同步记录到 `agent-space/decisions.md`。
+
 用户说”继续/直接做”只表示使用推荐路径，不表示跳过阶段。
 
 ## 两层循环
@@ -213,31 +238,46 @@ updated: {ISO 时间}
 agent-space/
   brief.md
   assignments.md
+  assignments.json
   questions.md
   decisions.md
   checkpoints/          ← 各阶段完成时的 checkpoint 文件
   findings/
   reviews/
   verification/
+  handoffs/
 ```
 
 通信规则：
 
 - `brief.md`：主 Agent 写，所有 Agent 读。
 - `assignments.md`：主 Agent 写，定义角色、输入、输出、文件所有权。
+- `assignments.json`：主 Agent 写，机器可校验的 Agent 分工、文件所有权和 required outputs。
 - `questions.md`：子 Agent 追加阻塞问题。
 - `decisions.md`：主 Agent 写最终决策，子 Agent 必须服从。
 - `findings/`：影响面和调研输出。
 - `reviews/`：任务级审查输出。
 - `verification/`：验证日志和结果。
+- `handoffs/`：子 Agent 完成后的交接说明。
 
 子 Agent 之间不直接互相协调；有冲突写入 `questions.md`，由主 Agent 在 `decisions.md` 裁决。
+
+机器协作规则：
+
+- 进入 `tasks` 后，主 Agent 必须运行 `harness-spec agents init {change-id}` 或手工维护 `assignments.json`。
+- 写代码 Agent 必须声明 `owned_paths`，不同写代码 Agent 的路径不得重叠。
+- 子 Agent 不得拥有 `run.json`、`decisions.md`、`assignments.json`。
+- 每个有 worker 的任务必须有独立 verifier 和 reviewer。
+- 子 Agent 完成后必须写 required outputs；后期 gate 会校验这些输出存在。
+- 每次进入 `implementation`、`verification`、`review` 前运行 `harness-spec agents verify {change-id}`。
 
 ## 阶段规则
 
 ### proposal
 
 写清为什么做、改什么、验收标准、非目标、开放问题。验收标准必须可观察、可验证。
+
+门禁：`harness-spec gate proposal {change-id}` 必须通过，确保 `proposal.md` 章节完整、无占位符、`proposal` 阶段已 passed，且有 `proposal-done.md`。
 
 ### impact
 
@@ -248,6 +288,8 @@ agent-space/
 - 可拆成 `impact-api`、`impact-db`、`impact-job-mq` 子 Agent。
 
 输出：`impact.md` 和必要的 `agent-space/findings/*.md`。
+
+门禁：`harness-spec gate impact {change-id}` 必须通过，确保影响面有代码证据、影响模块、风险和 checkpoint。
 
 ### design
 
@@ -263,6 +305,8 @@ agent-space/
 
 每条验收标准必须能映射到设计行为。
 
+门禁：`harness-spec gate design {change-id}` 必须通过，确保设计章节完整、无占位符、前置阶段已通过。
+
 ### tasks
 
 按可独立验收的功能点拆任务，不按文件机械拆。
@@ -276,11 +320,22 @@ agent-space/
 - 审查要求。
 - 修正记录。
 
+门禁：`harness-spec gate tasks {change-id}` 必须通过，确保存在 Tn 任务、任务状态合法、前置阶段已通过。
+任务拆分完成后必须初始化或更新 Agent 分工：
+
+```powershell
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" agents init {change-id}
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" agents verify {change-id}
+```
+
 ### implementation
 
 按 `tasks.md` 逐任务执行任务级循环。
 
 实现必须受 `proposal.md`、`impact.md`、`design.md`、`tasks.md` 约束。不做非目标，不顺手重构无关代码。
+
+门禁：`harness-spec gate implementation {change-id}` 必须通过，确保所有任务状态为 `done`，且实现阶段有 checkpoint。
+implementation gate 会要求 `assignments.json` 合法，并在该阶段开始要求子 Agent required outputs 已存在。
 
 ### verification
 
@@ -294,6 +349,13 @@ agent-space/
 
 命令无法运行时写明原因，不假装通过。
 
+同时必须运行 OpenSpec 状态机校验，并把结果写入 `verification.md`：
+
+```powershell
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" validate {change-id}
+node "$env:USERPROFILE\.codex\harness-spec\tools\harness-spec.js" gate verification {change-id}
+```
+
 ### review
 
 分两部分：
@@ -306,6 +368,13 @@ agent-space/
 - 这轮失败/风险来自需求理解、影响面、设计、实现、验证，还是测试数据？
 - 是否有相同类型问题会影响其他任务？
 - 下一轮修正如何证明问题已经消除？
+
+需求级 review 通过前必须满足：
+
+- `harness-spec validate {change-id} --strict` 通过。
+- `harness-spec gate review {change-id}` 通过。
+- 所有任务状态为 `done`。
+- 已通过阶段都有对应 checkpoint。
 
 ### archive
 

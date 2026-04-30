@@ -1,0 +1,43 @@
+{
+  "name": "harness-agentic-spec",
+  "version": "0.1.0",
+  "description": "Local OpenSpec-style Java backend delivery harness with greenfield scaffolding, stage gates, Agent collaboration, hooks, and reusable templates.",
+  "author": {
+    "name": "Harness Agentic Spec Team",
+    "email": "",
+    "url": ""
+  },
+  "homepage": "",
+  "repository": "",
+  "license": "UNLICENSED",
+  "keywords": [
+    "openspec",
+    "agentic-spec",
+    "java",
+    "multi-agent",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/plugin-hooks.json",
+  "interface": {
+    "displayName": "Harness Agentic Spec",
+    "shortDescription": "Spec-driven Java backend delivery with gates and Agent collaboration.",
+    "longDescription": "Provides local-spec-new, local-spec-bootstrap, and local-spec-dev skills, OpenSpec templates, session hooks, Java checks, and the harness-spec CLI for status, validation, gates, and Agent collaboration verification.",
+    "developerName": "Harness Agentic Spec Team",
+    "category": "Productivity",
+    "capabilities": [
+      "Write",
+      "Automation",
+      "Code Review"
+    ],
+    "websiteURL": "",
+    "privacyPolicyURL": "",
+    "termsOfServiceURL": "",
+    "defaultPrompt": [
+      "从0到1创建一个Java服务",
+      "开始开发一个小需求",
+      "检查当前 change 的质量门禁"
+    ],
+    "brandColor": "#2563EB"
+  }
+}

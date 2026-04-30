@@ -8,6 +8,12 @@
 const fs = require('fs');
 const path = require('path');
 
+try {
+  require('./bootstrap-install').bootstrapCodexAssets({ silent: true });
+} catch (error) {
+  console.error(`[OpenSpec] plugin initialization failed: ${error.message}`);
+}
+
 const projectDir = process.cwd();
 const openspecDir = path.join(projectDir, 'openspec');
 const changesDir = path.join(openspecDir, 'changes');

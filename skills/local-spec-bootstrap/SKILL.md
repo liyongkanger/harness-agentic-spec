@@ -135,7 +135,7 @@ description: 扫描当前老项目/棕地代码库，并把项目背景、模块
 
 ## 模块
 
-### scrm-waba-server
+### module-a
 
 - Controller：...
 - Service：...
@@ -221,4 +221,3 @@ description: 扫描当前老项目/棕地代码库，并把项目背景、模块
 - 已识别模块/技术栈/能力候选数量。
 - 高置信度结论和待确认项。
 - 建议下一步：继续补某个能力 spec，或切换到 `local-spec-dev` 开始需求开发。
-

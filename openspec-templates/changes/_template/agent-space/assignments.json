@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "change_id": "{change-id}",
+  "agents": [
+    {
+      "id": "impact-api",
+      "role": "impact",
+      "task": null,
+      "mode": "read_only",
+      "owned_paths": [],
+      "forbidden_paths": [
+        "openspec/changes/{change-id}/run.json",
+        "openspec/changes/{change-id}/agent-space/decisions.md"
+      ],
+      "required_outputs": [
+        "agent-space/findings/impact-api.md"
+      ],
+      "status": "pending"
+    }
+  ]
+}

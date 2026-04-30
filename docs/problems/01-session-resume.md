@@ -62,7 +62,7 @@ agent-space/checkpoints/    各阶段结束时的精简快照（≤30 行）
 - [x] `session-start-openspec.js` hook 实现（加载 checkpoint → 注入上下文）
 - [x] Claude Code `settings.json` 注册 SessionStart hook
 - [x] Codex `hooks.json` 注册 SessionStart hook
-- [x] scrm-waba `waba-quality-monitoring` 首个 checkpoint 验证通过
+- [x] 示例项目 `{change-id}` 首个 checkpoint 验证通过
 
 ### 未完成 / 缺口
 

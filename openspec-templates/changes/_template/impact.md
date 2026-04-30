@@ -14,9 +14,9 @@
 
 ## 影响模块
 
-- [ ] `scrm-waba-client`
-- [ ] `scrm-waba-common`
-- [ ] `scrm-waba-server`
+- [ ] `module-a`
+- [ ] `module-b`
+- [ ] `module-c`
 
 ## 可能涉及文件
 
@@ -33,4 +33,3 @@
 - [ ] 已识别现有代码入口，或已记录扫描缺口。
 - [ ] 已列出受影响模块。
 - [ ] 已明确风险和未知项。
-
