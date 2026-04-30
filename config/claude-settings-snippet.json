@@ -1,0 +1,16 @@
+{
+  "_comment": "把以下内容合并到 ~/.claude/settings.json 的 hooks.SessionStart 数组里",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/<YOUR_USERNAME>/.claude/hooks/session-start-openspec.js\""
+          }
+        ]
+      }
+    ]
+  }
+}

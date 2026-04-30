@@ -1,0 +1,31 @@
+{
+  "change_id": "{change-id}",
+  "title": "{Change Title}",
+  "current_stage": "proposal",
+  "active_task": null,
+  "iteration": 0,
+  "stages": {
+    "proposal": "pending",
+    "impact": "pending",
+    "design": "pending",
+    "tasks": "pending",
+    "implementation": "pending",
+    "verification": "pending",
+    "review": "pending",
+    "archive": "pending"
+  },
+  "artifacts": {
+    "proposal": "proposal.md",
+    "impact": "impact.md",
+    "design": "design.md",
+    "tasks": "tasks.md",
+    "verification": "verification.md",
+    "review": "review.md",
+    "agent_space": "agent-space/"
+  },
+  "tasks": [],
+  "task_iterations": {},
+  "review_loops": [],
+  "last_error": null,
+  "updated_at": null
+}

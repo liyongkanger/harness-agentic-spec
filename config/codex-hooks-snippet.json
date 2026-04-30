@@ -1,0 +1,18 @@
+{
+  "_comment": "内容写入 ~/.codex/hooks.json，同时在 ~/.codex/config.toml 加 [features] codex_hooks = true",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/<YOUR_USERNAME>/.claude/hooks/session-start-openspec.js\"",
+            "statusMessage": "Loading OpenSpec context...",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
