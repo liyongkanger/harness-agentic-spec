@@ -1,4 +1,4 @@
-# openspec-kit
+# harness-agentic-spec
 
 团队专属的规格驱动开发工具包。
 
@@ -24,8 +24,8 @@ openspec-templates/
 ## 安装
 
 ```powershell
-git clone <this-repo> D:\metadata\openspec-kit
-cd D:\metadata\openspec-kit
+git clone <this-repo> D:\metadata\harness-agentic-spec
+cd D:\metadata\harness-agentic-spec
 .\install.ps1
 ```
 
